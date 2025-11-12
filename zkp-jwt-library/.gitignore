@@ -61,6 +61,10 @@ frontend/dist/
 frontend/.vite/
 frontend/.cache/
 
+# Demo
+demo/.vite/
+demo/dist/
+
 # Library
 library/dist/
 library/build/
