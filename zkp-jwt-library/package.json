@@ -1,0 +1,37 @@
+{
+  "name": "zkpjwt-monorepo",
+  "version": "1.0.0",
+  "description": "Zero-Knowledge Proof JSON Web Token Protocol - Monorepo",
+  "private": true,
+  "workspaces": [
+    "library",
+    "demo"
+  ],
+  "scripts": {
+    "build": "npm run build:library",
+    "build:library": "cd library && npm run build",
+    "build:demo": "cd demo && npm run build",
+    "dev:demo": "cd demo && npm run dev",
+    "test": "cd library && npm test",
+    "examples": "cd library && npm run build && node dist/examples.js"
+  },
+  "keywords": [
+    "zkp",
+    "jwt",
+    "zero-knowledge",
+    "privacy",
+    "arbitrum",
+    "blockchain",
+    "cryptography"
+  ],
+  "author": "DevCristobalvc",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DevCristobalvc/zkp-jwt.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DevCristobalvc/zkp-jwt/issues"
+  },
+  "homepage": "https://github.com/DevCristobalvc/zkp-jwt#readme"
+}
