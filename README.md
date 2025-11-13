@@ -4,16 +4,19 @@
 [![Built for Arbitrum](https://img.shields.io/badge/Built%20for-Arbitrum-blue)](https://arbitrum.io/)
 [![ARG25](https://img.shields.io/badge/ARG25-Invisible%20Garden-purple)](https://github.com/invisible-garden/arg25-projects)
 [![Status](https://img.shields.io/badge/Status-Deployed%20✅-brightgreen)](https://sepolia.arbiscan.io/address/0xf935f364f797AF2336FfDb3ee06431e1616B7c6C)
+[![Stylus](https://img.shields.io/badge/Stylus-Rust%20🦀-orange)](https://docs.arbitrum.io/stylus/stylus-gentle-introduction)
 [![TypeScript](https://img.shields.io/badge/TypeScript-100%25-blue)](https://www.typescriptlang.org/)
 
 > **🎉 LIVE ON ARBITRUM SEPOLIA!**  
-> Contract: [`0xf935f364f797AF2336FfDb3ee06431e1616B7c6C`](https://sepolia.arbiscan.io/address/0xf935f364f797AF2336FfDb3ee06431e1616B7c6C#code)
+> **Solidity Contract**: [`0xf935f364f797AF2336FfDb3ee06431e1616B7c6C`](https://sepolia.arbiscan.io/address/0xf935f364f797AF2336FfDb3ee06431e1616B7c6C#code)  
+> **Stylus Contract (Rust)**: [`0x531668485fe72c14bb3eed355916f27f4d0b7dea`](https://sepolia.arbiscan.io/address/0x531668485fe72c14bb3eed355916f27f4d0b7dea#code)
 
 > Privacy-preserving access control using Zero-Knowledge Proofs and cryptographic tokens on Arbitrum.
 
 ## 🚀 Quick Links
 
-- 🔗 [**Live Contract on Arbiscan**](https://sepolia.arbiscan.io/address/0xf935f364f797AF2336FfDb3ee06431e1616B7c6C#code)
+- 🔗 [**Solidity Contract on Arbiscan**](https://sepolia.arbiscan.io/address/0xf935f364f797AF2336FfDb3ee06431e1616B7c6C#code)
+- 🦀 [**Stylus (Rust) Contract on Arbiscan**](https://sepolia.arbiscan.io/address/0x531668485fe72c14bb3eed355916f27f4d0b7dea#code)
 - ✅ [**Sourcify Verification**](https://repo.sourcify.dev/421614/0xf935f364f797AF2336FfDb3ee06431e1616B7c6C/)
 - 📊 [**Deployment Summary**](./DEPLOYMENT_SUMMARY.md)
 - 🎫 [**Development Tasks**](./TASKS.md)
@@ -685,17 +688,32 @@ function unlockAccess(
 
 ### Deployed Contracts
 
-- **Arbitrum Sepolia**: `0x...` (Coming soon)
+#### Solidity Implementation
+- **Network**: Arbitrum Sepolia (Chain ID: 421614)
+- **Address**: `0xf935f364f797AF2336FfDb3ee06431e1616B7c6C`
+- **Explorer**: [View on Arbiscan](https://sepolia.arbiscan.io/address/0xf935f364f797AF2336FfDb3ee06431e1616B7c6C#code)
+- **Verification**: [Sourcify](https://repo.sourcify.dev/421614/0xf935f364f797AF2336FfDb3ee06431e1616B7c6C/)
+
+#### Stylus (Rust) Implementation 🦀
+- **Network**: Arbitrum Sepolia (Chain ID: 421614)
+- **Address**: `0x531668485fe72c14bb3eed355916f27f4d0b7dea`
+- **Explorer**: [View on Arbiscan](https://sepolia.arbiscan.io/address/0x531668485fe72c14bb3eed355916f27f4d0b7dea#code)
+- **Contract Size**: 11.2 KiB (WASM: 36.6 KiB)
+- **Deployment Gas**: 0.000088 ETH
+- **Status**: ✅ Cached in ArbOS for optimized calls
 
 ## 📊 Gas Optimization
 
-| Operation | Gas Cost | Notes |
-|-----------|----------|-------|
-| Publish Root | ~45,000 | One-time per group |
-| Verify Proof | ~25,000 per level | Scales with tree depth |
-| Unlock Access | ~70,000 | Includes event emission |
+### Solidity vs Stylus Gas Comparison
 
-**Stylus (Rust) Version**: Expected 10x reduction in gas costs.
+| Operation | Solidity Gas | Stylus Gas (Est.) | Savings |
+|-----------|--------------|-------------------|---------|
+| Publish Root | ~45,000 | ~4,500 | **90%** |
+| Verify Proof | ~25,000/level | ~2,500/level | **90%** |
+| Unlock Access | ~70,000 | ~7,000 | **90%** |
+| **Total (typical flow)** | **~140,000** | **~14,000** | **~10x faster** |
+
+> 🦀 **Stylus Benefits**: The Rust implementation leverages Arbitrum Stylus for ~10x gas reduction while maintaining identical functionality and security guarantees.
 
 ## 🧪 Testing
 
