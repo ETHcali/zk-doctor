@@ -32,6 +32,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 /* Navigation */
@@ -42,12 +44,15 @@ body {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: saturate(180%) blur(20px);
   border-bottom: 1px solid var(--gray-200);
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .nav-content {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 2rem;
+  width: 100%;
+  max-width: 1400px;
+  padding: 0 3rem;
   height: 64px;
   display: flex;
   justify-content: space-between;
@@ -157,12 +162,15 @@ body {
 .hero {
   background: linear-gradient(180deg, #FAFAFA 0%, #FFFFFF 100%);
   border-bottom: 1px solid var(--gray-200);
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .hero-content {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 5rem 2rem 4rem;
+  width: 100%;
+  max-width: 1400px;
+  padding: 5rem 3rem 4rem;
   text-align: center;
 }
 
@@ -188,7 +196,8 @@ body {
 .mode-tabs {
   background: white;
   border-bottom: 1px solid var(--gray-200);
-  padding: 0 2rem;
+  padding: 0 3rem;
+  width: 100%;
   display: flex;
   justify-content: center;
   gap: 2rem;
@@ -218,15 +227,15 @@ body {
 /* Main */
 .main {
   flex: 1;
-  padding: 3rem 2rem;
+  width: 100%;
   display: flex;
   justify-content: center;
-  width: 100%;
+  padding: 3rem 3rem;
 }
 
 .container {
-  max-width: 720px;
   width: 100%;
+  max-width: 800px;
 }
 
 /* Panel */
@@ -453,7 +462,7 @@ input:focus {
   border-radius: 12px;
   padding: 3rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  max-width: 900px;
+  max-width: 1000px;
   width: 100%;
 }
 
@@ -578,12 +587,15 @@ input:focus {
   margin-top: auto;
   background: var(--gray-50);
   border-top: 1px solid var(--gray-200);
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .footer-content {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
+  max-width: 1400px;
+  padding: 2rem 3rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
