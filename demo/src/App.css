@@ -1,24 +1,28 @@
 :root {
-  --primary: #4f46e5;
-  --primary-dark: #4338ca;
-  --success: #10b981;
-  --error: #ef4444;
-  --bg-dark: #1a1a2e;
-  --bg-panel: #16213e;
-  --text: #e4e4e7;
-  --border: #3f3f46;
+  --primary: #2c5aa0;
+  --primary-dark: #1e3d6f;
+  --success: #2d8659;
+  --error: #c24444;
+  --bg-dark: #1a1d29;
+  --bg-panel: #24283a;
+  --text: #e8e8e8;
+  --border: #4a5568;
+  --accent: #5b7fb5;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
 body {
-  background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  background: #0f1419;
   color: var(--text);
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Courier New', 'Courier', monospace;
   min-height: 100vh;
 }
 
@@ -26,97 +30,151 @@ body {
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
+  position: relative;
+}
+
+.wallet-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+}
+
+.wallet-toggle button {
+  background: var(--primary);
+  color: white;
+  border: 3px solid var(--border);
+  padding: 0.6rem 1.2rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+}
+
+.wallet-toggle button:hover {
+  background: var(--primary-dark);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.wallet-toggle button:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.wallet-toggle .connected {
+  background: var(--success);
+  border-color: var(--success);
 }
 
 .app-header {
   text-align: center;
   margin-bottom: 3rem;
+  padding-top: 3rem;
+  border-bottom: 4px solid var(--border);
+  padding-bottom: 2rem;
 }
 
 .app-header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--primary);
+  letter-spacing: 0.1em;
+  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
 }
 
-.app-header p {
+.app-header .tagline {
   font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.app-header .subtitle {
+  font-size: 0.95rem;
   opacity: 0.8;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.3rem;
 }
 
 .connect-btn {
   background: var(--primary);
   color: white;
-  border: none;
+  border: 3px solid var(--border);
   padding: 0.75rem 2rem;
-  border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
 }
 
 .connect-btn:hover {
   background: var(--primary-dark);
-  transform: translateY(-2px);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.connect-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
 }
 
 .wallet-info {
-  background: rgba(79, 70, 229, 0.1);
-  border: 1px solid var(--primary);
+  background: var(--bg-panel);
+  border: 3px solid var(--primary);
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
   display: inline-flex;
   align-items: center;
   gap: 1rem;
+  font-family: 'Courier New', monospace;
 }
 
 .disconnect-btn {
-  background: rgba(239, 68, 68, 0.2);
-  border: 1px solid var(--error);
-  color: var(--error);
+  background: var(--error);
+  border: 2px solid var(--border);
+  color: white;
   padding: 0.4rem 0.8rem;
-  border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: all 0.2s;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
 }
 
 .disconnect-btn:hover {
-  background: rgba(239, 68, 68, 0.3);
+  opacity: 0.8;
 }
 
 .mode-selector {
   display: flex;
   gap: 1rem;
   justify-content: center;
-  margin: 1.5rem 0;
+  margin: 2rem 0;
 }
 
 .mode-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid var(--border);
+  background: var(--bg-panel);
+  border: 3px solid var(--border);
   color: var(--text);
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
-  transition: all 0.3s;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
   min-width: 200px;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
 }
 
 .mode-btn:hover {
+  background: var(--bg-dark);
   border-color: var(--primary);
-  background: rgba(79, 70, 229, 0.1);
 }
 
 .mode-btn.active {
   background: var(--primary);
   border-color: var(--primary);
   color: white;
-  font-weight: 600;
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .main-container {
@@ -125,31 +183,27 @@ body {
 }
 
 .info-box {
-  background: rgba(79, 70, 229, 0.1);
-  border: 1px solid var(--primary);
+  background: var(--bg-panel);
+  border: 3px solid var(--primary);
   padding: 1rem;
-  border-radius: 8px;
   margin-bottom: 1.5rem;
   text-align: center;
 }
 
 .info-box p {
   margin: 0;
-  opacity: 0.9;
 }
 
 .token-output {
-  background: rgba(16, 185, 129, 0.05);
-  border: 1px solid var(--success);
+  background: var(--bg-panel);
+  border: 3px solid var(--success);
   padding: 1rem;
-  border-radius: 8px;
   margin-top: 1.5rem;
 }
 
 .token-box {
   background: var(--bg-dark);
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  border: 2px solid var(--border);
   padding: 1rem;
   max-height: 300px;
   overflow-y: auto;
@@ -168,18 +222,25 @@ body {
   width: 100%;
   background: var(--success);
   color: white;
-  border: none;
+  border: 3px solid var(--border);
   padding: 0.75rem;
-  border-radius: 6px;
   cursor: pointer;
   font-size: 1rem;
   margin-top: 0.5rem;
-  transition: all 0.2s;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
 }
 
 .copy-btn:hover {
   opacity: 0.9;
-  transform: translateY(-1px);
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.copy-btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: none;
 }
 
 .hint {
@@ -196,28 +257,31 @@ body {
 }
 
 .action-btn.secondary {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid var(--border);
+  background: var(--bg-panel);
+  border: 3px solid var(--border);
 }
 
 .action-btn.secondary:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--bg-dark);
 }
 
 .reset-btn {
   width: 100%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border);
+  background: var(--bg-panel);
+  border: 3px solid var(--border);
   color: var(--text);
   padding: 0.75rem;
-  border-radius: 6px;
   cursor: pointer;
   margin-top: 1rem;
-  transition: all 0.2s;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
 }
 
 .reset-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--bg-dark);
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
 }
 
 .placeholder-text {
@@ -246,16 +310,17 @@ body {
 
 .panel {
   background: var(--bg-panel);
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  border: 4px solid var(--border);
   padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.3);
 }
 
 .panel h2 {
   font-size: 1.5rem;
   margin-bottom: 1.5rem;
   color: var(--primary);
+  border-bottom: 3px solid var(--border);
+  padding-bottom: 0.5rem;
 }
 
 .section {
@@ -271,17 +336,17 @@ body {
 textarea, input[type="text"] {
   width: 100%;
   background: var(--bg-dark);
-  border: 1px solid var(--border);
+  border: 3px solid var(--border);
   color: var(--text);
   padding: 0.75rem;
-  border-radius: 6px;
-  font-family: inherit;
+  font-family: 'Courier New', monospace;
   font-size: 0.95rem;
 }
 
 textarea:focus, input:focus {
   outline: none;
   border-color: var(--primary);
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .wallet-input {
@@ -297,15 +362,18 @@ textarea:focus, input:focus {
 .wallet-input button {
   background: var(--success);
   color: white;
-  border: none;
+  border: 3px solid var(--border);
   padding: 0.5rem 1rem;
-  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
 }
 
 .wallet-input button:hover {
   opacity: 0.9;
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
 }
 
 .wallet-list {
@@ -317,36 +385,46 @@ textarea:focus, input:focus {
 .wallet-item {
   background: var(--bg-dark);
   padding: 0.5rem 1rem;
-  border-radius: 6px;
+  border: 2px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-family: 'Courier New', monospace;
 }
 
 .wallet-item button {
-  background: none;
-  border: none;
+  background: var(--error);
+  border: 2px solid var(--border);
+  color: white;
+  padding: 0.2rem 0.5rem;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.8rem;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
 }
 
 .action-btn {
   width: 100%;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  background: var(--primary);
   color: white;
-  border: none;
+  border: 3px solid var(--border);
   padding: 1rem;
-  border-radius: 8px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s;
   margin-top: 1rem;
+  font-family: 'Courier New', monospace;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
 }
 
 .action-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(79, 70, 229, 0.3);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.action-btn:active:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: none;
 }
 
 .action-btn:disabled {
@@ -357,9 +435,10 @@ textarea:focus, input:focus {
 .status {
   margin-top: 1rem;
   padding: 0.75rem;
-  border-radius: 6px;
+  border: 3px solid var(--border);
   text-align: center;
-  font-weight: 600;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
 }
 
 .placeholder {
@@ -376,8 +455,9 @@ textarea:focus, input:focus {
 .token-info {
   background: var(--bg-dark);
   padding: 1rem;
-  border-radius: 6px;
+  border: 2px solid var(--border);
   font-size: 0.9rem;
+  font-family: 'Courier New', monospace;
 }
 
 .token-info div {
@@ -385,26 +465,25 @@ textarea:focus, input:focus {
 }
 
 .success {
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid var(--success);
+  background: var(--bg-panel);
+  border: 3px solid var(--success);
   padding: 1rem;
-  border-radius: 8px;
 }
 
 .error {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid var(--error);
+  background: var(--bg-panel);
+  border: 3px solid var(--error);
   padding: 1rem;
-  border-radius: 8px;
 }
 
 .decrypted-message {
   background: var(--bg-dark);
   padding: 1rem;
-  border-radius: 6px;
+  border: 2px solid var(--border);
   margin-top: 0.5rem;
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
 }
 
 .app-footer {
@@ -412,11 +491,14 @@ textarea:focus, input:focus {
   padding: 2rem;
   opacity: 0.6;
   font-size: 0.9rem;
+  border-top: 3px solid var(--border);
+  margin-top: 3rem;
 }
 
 .app-footer a {
-  color: var(--primary);
+  color: var(--accent);
   text-decoration: none;
+  font-weight: bold;
 }
 
 .app-footer a:hover {

@@ -23,7 +23,7 @@ function ReceiverPanel({ wallet }: ReceiverPanelProps) {
     try {
       const text = await navigator.clipboard.readText();
       setTokenInput(text);
-      setStatus('📋 Token pasted from clipboard');
+      setStatus('Token pasted from clipboard');
       setTimeout(() => setStatus(''), 2000);
     } catch (error) {
       alert('Failed to read clipboard. Please paste manually.');
@@ -41,11 +41,11 @@ function ReceiverPanel({ wallet }: ReceiverPanelProps) {
       setParsedToken(token);
       setIsAuthorized(null);
       setDecryptedMessage('');
-      setStatus('✅ Token loaded successfully');
+      setStatus('Token loaded successfully');
     } catch (error) {
       console.error('Error parsing token:', error);
       alert('Invalid token format');
-      setStatus('❌ Invalid token format');
+      setStatus('Invalid token format');
     }
   };
 
@@ -60,18 +60,18 @@ function ReceiverPanel({ wallet }: ReceiverPanelProps) {
       return;
     }
 
-    setStatus('⏳ Checking network...');
+    setStatus('Checking network...');
 
     try {
       // Check network
       const network = await wallet.provider.getNetwork();
       if (Number(network.chainId) !== ARBITRUM_SEPOLIA_CHAIN_ID) {
         alert(`Please switch to Arbitrum Sepolia (Chain ID: ${ARBITRUM_SEPOLIA_CHAIN_ID})`);
-        setStatus('❌ Wrong network');
+        setStatus('Wrong network');
         return;
       }
 
-      setStatus('⏳ Checking if your wallet is authorized...');
+      setStatus('Checking if your wallet is authorized...');
       
       // Check if wallet is in authorized list
       const authorized = parsedToken.authorizedWallets.some(
@@ -80,11 +80,11 @@ function ReceiverPanel({ wallet }: ReceiverPanelProps) {
       
       if (!authorized) {
         setIsAuthorized(false);
-        setStatus('❌ Access denied - Your wallet is not in the authorized list');
+        setStatus('Access denied - Your wallet is not in the authorized list');
         return;
       }
 
-      setStatus('⏳ Verifying on blockchain...');
+      setStatus('Verifying on blockchain...');
 
       // Connect to contract
       const signer = await wallet.provider.getSigner();
@@ -94,7 +94,7 @@ function ReceiverPanel({ wallet }: ReceiverPanelProps) {
       const rootExists = await contract.rootExists(parsedToken.merkleRoot);
       if (!rootExists) {
         setIsAuthorized(false);
-        setStatus('❌ Merkle root not found on blockchain');
+        setStatus('Merkle root not found on blockchain');
         return;
       }
 
@@ -102,12 +102,12 @@ function ReceiverPanel({ wallet }: ReceiverPanelProps) {
       const leaf = keccak256(toUtf8Bytes(wallet.address.toLowerCase()));
       const proof: string[] = []; // In production, calculate actual Merkle proof
 
-      setStatus('⏳ Calling unlockAccess on smart contract...');
+      setStatus('Calling unlockAccess on smart contract...');
 
       // Call unlockAccess (this will fail with empty proof, but demonstrates the flow)
       try {
         const tx = await contract.unlockAccess(parsedToken.merkleRoot, leaf, proof);
-        setStatus(`⏳ Transaction sent: ${tx.hash.slice(0, 10)}... Waiting for confirmation...`);
+        setStatus(`Transaction sent: ${tx.hash.slice(0, 10)}... Waiting for confirmation...`);
         
         const receipt = await tx.wait();
         setVerifyTxHash(tx.hash);
@@ -124,20 +124,20 @@ function ReceiverPanel({ wallet }: ReceiverPanelProps) {
 
         if (grantedEvent) {
           setIsAuthorized(true);
-          setStatus('✅ Access granted on-chain! Decrypting message...');
+          setStatus('Access granted on-chain! Decrypting message...');
           
           // Decrypt message
           const decrypted = atob(parsedToken.encrypted);
           setDecryptedMessage(decrypted);
         } else {
           setIsAuthorized(false);
-          setStatus('❌ Access denied by smart contract');
+          setStatus('Access denied by smart contract');
         }
       } catch (contractError: any) {
         // For demo purposes, if proof verification fails, still show local check result
         console.warn('Smart contract verification failed (expected with empty proof):', contractError);
         setIsAuthorized(true);
-        setStatus('✅ Wallet authorized locally! (Proof verification skipped for demo)');
+        setStatus('Wallet authorized locally! (Proof verification skipped for demo)');
         
         // Decrypt message anyway for demo
         const decrypted = atob(parsedToken.encrypted);
@@ -146,7 +146,7 @@ function ReceiverPanel({ wallet }: ReceiverPanelProps) {
       
     } catch (error: any) {
       console.error('Error verifying access:', error);
-      setStatus(`❌ Error: ${error.message || 'Verification failed'}`);
+      setStatus(`Error: ${error.message || 'Verification failed'}`);
     }
   };
 
@@ -161,11 +161,11 @@ function ReceiverPanel({ wallet }: ReceiverPanelProps) {
 
   return (
     <div className="panel receiver-panel">
-      <h2>📥 Receiver: Decrypt Message</h2>
+      <h2>Receiver: Decrypt Message</h2>
 
       {!wallet.address && (
         <div className="info-box">
-          <p>👆 Connect your wallet to decrypt messages</p>
+          <p>Connect your wallet to decrypt messages</p>
         </div>
       )}
 
@@ -185,14 +185,14 @@ function ReceiverPanel({ wallet }: ReceiverPanelProps) {
               onClick={pasteToken}
               disabled={!wallet.address}
             >
-              📋 Paste from Clipboard
+              Paste from Clipboard
             </button>
             <button 
               className="action-btn"
               onClick={loadToken}
               disabled={!wallet.address || !tokenInput}
             >
-              🔍 Load Token
+              Load Token
             </button>
           </div>
         </div>
@@ -216,7 +216,7 @@ function ReceiverPanel({ wallet }: ReceiverPanelProps) {
               onClick={verifyAccess}
               disabled={!wallet.address}
             >
-              🔓 Verify Access & Decrypt
+              Verify Access & Decrypt
             </button>
           )}
 
@@ -224,26 +224,26 @@ function ReceiverPanel({ wallet }: ReceiverPanelProps) {
 
           {isAuthorized === true && decryptedMessage && (
             <div className="section success">
-              <label>✅ Decrypted Message:</label>
+              <label>Decrypted Message:</label>
               <div className="decrypted-message">
                 {decryptedMessage}
               </div>
               {verifyTxHash && (
                 <p className="hint">
-                  🔗 <a href={`${EXPLORER_URL}/tx/${verifyTxHash}`} target="_blank" rel="noopener noreferrer">
+                  <a href={`${EXPLORER_URL}/tx/${verifyTxHash}`} target="_blank" rel="noopener noreferrer">
                     View verification transaction on Arbiscan
                   </a>
                 </p>
               )}
               <p className="hint">
-                🎉 Success! You were authorized to read this message.
+                Success! You were authorized to read this message.
               </p>
             </div>
           )}
 
           {isAuthorized === false && (
             <div className="section error">
-              <label>❌ Access Denied:</label>
+              <label>Access Denied:</label>
               <p>Your wallet ({wallet.address?.slice(0, 10)}...{wallet.address?.slice(-8)}) is not in the authorized group.</p>
               <p className="hint">Only these wallets can decrypt:</p>
               <ul>
@@ -255,7 +255,7 @@ function ReceiverPanel({ wallet }: ReceiverPanelProps) {
           )}
 
           <button className="reset-btn" onClick={reset}>
-            🔄 Try Another Token
+            Try Another Token
           </button>
         </>
       )}

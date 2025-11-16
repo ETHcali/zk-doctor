@@ -41,38 +41,38 @@ function App() {
 
   return (
     <div className="App">
-      <header className="app-header">
-        <h1>🔐 ZKPJWT Protocol Demo</h1>
-        <p>Privacy-Preserving Access Control with Zero-Knowledge Proofs</p>
-        
-        <div className="mode-selector">
-          <button 
-            className={`mode-btn ${mode === 'sender' ? 'active' : ''}`}
-            onClick={() => switchMode('sender')}
-          >
-            📤 Sender (Create Token)
-          </button>
-          <button 
-            className={`mode-btn ${mode === 'receiver' ? 'active' : ''}`}
-            onClick={() => switchMode('receiver')}
-          >
-            📥 Receiver (Decrypt)
-          </button>
-        </div>
-
+      <div className="wallet-toggle">
         {!wallet.address ? (
-          <button onClick={connectWallet} className="connect-btn">
-            Connect MetaMask
+          <button onClick={connectWallet}>
+            Connect Wallet
           </button>
         ) : (
-          <div className="wallet-info">
-            <span>✅ Connected: {wallet.address.slice(0, 6)}...{wallet.address.slice(-4)}</span>
-            <button onClick={disconnectWallet} className="disconnect-btn">
-              Disconnect
-            </button>
-          </div>
+          <button onClick={disconnectWallet} className="connected">
+            {wallet.address.slice(0, 6)}...{wallet.address.slice(-4)}
+          </button>
         )}
+      </div>
+
+      <header className="app-header">
+        <h1>ZKPJWT</h1>
+        <p className="tagline">The ancient JWT from Web2 with the power of ZKP</p>
+        <p className="subtitle">A Web2-friendly library</p>
       </header>
+
+      <div className="mode-selector">
+        <button 
+          className={`mode-btn ${mode === 'sender' ? 'active' : ''}`}
+          onClick={() => switchMode('sender')}
+        >
+          Sender (Create Token)
+        </button>
+        <button 
+          className={`mode-btn ${mode === 'receiver' ? 'active' : ''}`}
+          onClick={() => switchMode('receiver')}
+        >
+          Receiver (Decrypt)
+        </button>
+      </div>
 
       <div className="main-container">
         {mode === 'sender' ? (

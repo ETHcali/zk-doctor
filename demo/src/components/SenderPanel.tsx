@@ -41,14 +41,14 @@ function SenderPanel({ wallet }: SenderPanelProps) {
       return;
     }
 
-    setStatus('⏳ Building Merkle tree from authorized wallets...');
+    setStatus('Building Merkle tree from authorized wallets...');
 
     try {
       // Check network
       const network = await wallet.provider.getNetwork();
       if (Number(network.chainId) !== ARBITRUM_SEPOLIA_CHAIN_ID) {
         alert(`Please switch to Arbitrum Sepolia (Chain ID: ${ARBITRUM_SEPOLIA_CHAIN_ID})`);
-        setStatus('❌ Wrong network');
+        setStatus('Error: Wrong network');
         return;
       }
 
@@ -64,7 +64,7 @@ function SenderPanel({ wallet }: SenderPanelProps) {
         merkleRoot = keccak256(toUtf8Bytes(leaves.join('')));
       }
 
-      setStatus('⏳ Publishing Merkle root to blockchain...');
+      setStatus('Publishing Merkle root to blockchain...');
 
       // Connect to contract
       const signer = await wallet.provider.getSigner();
@@ -72,12 +72,12 @@ function SenderPanel({ wallet }: SenderPanelProps) {
 
       // Publish root on-chain
       const tx = await contract.publishRoot(merkleRoot);
-      setStatus(`⏳ Transaction sent: ${tx.hash.slice(0, 10)}... Waiting for confirmation...`);
+      setStatus(`Transaction sent: ${tx.hash.slice(0, 10)}... Waiting for confirmation...`);
       
       await tx.wait();
       setTxHash(tx.hash);
       
-      setStatus('⏳ Encrypting message...');
+      setStatus('Encrypting message...');
 
       // Create token with encrypted message
       const mockToken = {
@@ -97,27 +97,27 @@ function SenderPanel({ wallet }: SenderPanelProps) {
 
       const tokenStr = JSON.stringify(mockToken, null, 2);
       setGeneratedToken(tokenStr);
-      setStatus('✅ Token generated and root published on-chain!');
+      setStatus('Token generated and root published on-chain!');
       
     } catch (error: any) {
       console.error('Error generating token:', error);
-      setStatus(`❌ Error: ${error.message || 'Failed to generate token'}`);
+      setStatus(`Error: ${error.message || 'Failed to generate token'}`);
     }
   };
 
   const copyToken = () => {
     navigator.clipboard.writeText(generatedToken);
-    setStatus('📋 Token copied to clipboard!');
-    setTimeout(() => setStatus('✅ Token generated successfully! Copy it below.'), 2000);
+    setStatus('Token copied to clipboard!');
+    setTimeout(() => setStatus('Token generated successfully! Copy it below.'), 2000);
   };
 
   return (
     <div className="panel sender-panel">
-      <h2>📤 Sender: Create ZKPJWT Token</h2>
+      <h2>Sender: Create ZKPJWT Token</h2>
       
       {!wallet.address && (
         <div className="info-box">
-          <p>👆 Connect your wallet to create an encrypted token</p>
+          <p>Connect your wallet to create an encrypted token</p>
         </div>
       )}
 
@@ -150,7 +150,7 @@ function SenderPanel({ wallet }: SenderPanelProps) {
           {wallets.map((w, i) => (
             <div key={i} className="wallet-item">
               <span>{w.slice(0, 10)}...{w.slice(-8)}</span>
-              <button onClick={() => removeWallet(i)}>❌</button>
+              <button onClick={() => removeWallet(i)}>X</button>
             </div>
           ))}
           {wallets.length === 0 && wallet.address && (
@@ -164,17 +164,17 @@ function SenderPanel({ wallet }: SenderPanelProps) {
         onClick={generateToken}
         disabled={!wallet.address || !message || wallets.length === 0}
       >
-        🔐 Generate ZKPJWT Token
+        Generate ZKPJWT Token
       </button>
 
       {status && <div className="status">{status}</div>}
 
       {generatedToken && (
         <div className="section token-output">
-          <label>✅ Your ZKPJWT Token:</label>
+          <label>Your ZKPJWT Token:</label>
           {txHash && (
             <p className="hint">
-              🔗 <a href={`${EXPLORER_URL}/tx/${txHash}`} target="_blank" rel="noopener noreferrer">
+              <a href={`${EXPLORER_URL}/tx/${txHash}`} target="_blank" rel="noopener noreferrer">
                 View transaction on Arbiscan
               </a>
             </p>
@@ -183,10 +183,10 @@ function SenderPanel({ wallet }: SenderPanelProps) {
             <pre>{generatedToken}</pre>
           </div>
           <button className="copy-btn" onClick={copyToken}>
-            📋 Copy Token
+            Copy Token
           </button>
           <p className="hint">
-            💡 Share this token with authorized recipients. They can paste it in the Receiver tab.
+            Share this token with authorized recipients. They can paste it in the Receiver tab.
           </p>
         </div>
       )}
