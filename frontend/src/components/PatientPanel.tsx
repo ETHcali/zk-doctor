@@ -1,5 +1,5 @@
 /**
- * PatientPanel - Interfaz para que el paciente vea y descifre sus resultados médicos
+ * PatientPanel - Interface for patients to view and decrypt their medical results
  */
 
 import { useState, useEffect } from 'react';
@@ -36,25 +36,25 @@ function PatientPanel({ wallet }: PatientPanelProps) {
 
   const loadResults = async () => {
     if (!wallet.address) {
-      setStatus('Por favor conecta tu wallet primero');
+      setStatus('Please connect your wallet first');
       return;
     }
 
     setIsLoading(true);
-    setStatus('🔍 Consultando Arkiv...');
+    setStatus('Querying Arkiv...');
 
     try {
       const results = await getPatientResults(wallet.address);
       setMedicalResults(results);
       
       if (results.length === 0) {
-        setStatus('No se encontraron resultados médicos para esta wallet');
+        setStatus('No medical results found for this wallet');
       } else {
-        setStatus(`✅ Se encontraron ${results.length} resultado(s) médico(s)`);
+        setStatus(`SUCCESS: Found ${results.length} medical result(s)`);
       }
     } catch (error) {
       console.error('Error loading results:', error);
-      setStatus(`❌ Error consultando resultados: ${error}`);
+      setStatus(`Error querying results: ${error}`);
     } finally {
       setIsLoading(false);
     }
@@ -67,22 +67,51 @@ function PatientPanel({ wallet }: PatientPanelProps) {
     }
 
     setIsLoading(true);
-    setStatus('🔓 Descifrando resultado...');
+    setStatus('Decrypting result...');
     setSelectedResult(result);
+
+    console.log('🔓 ATTEMPTING DECRYPTION');
+    console.log('  Connected Wallet:', wallet.address);
+    console.log('  Entity Key:', result.entityKey);
+    console.log('  Doctor:', result.doctor);
+    console.log('  Timestamp:', result.timestamp);
 
     try {
       // Deserialize token
+      console.log('  Step 1: Deserializing token...');
       const token = deserializeToken(result.encryptedToken);
+      console.log('  Token Version:', token.version);
+      console.log('  Token IV Length:', token.iv.length);
+      console.log('  Token Encrypted Length:', token.encrypted.length);
       
       // Decrypt
+      console.log('  Step 2: Attempting decryption with wallet:', wallet.address);
       const medicalData = decryptMedicalToken(token, wallet.address);
       
+      console.log('  ✅ DECRYPTION SUCCESS!');
+      console.log('  Patient Name:', medicalData.patientName);
+      console.log('  Patient Wallet from data:', medicalData.patientWallet);
+      console.log('  Test Type:', medicalData.testType);
+      
       setDecryptedData(medicalData);
-      setStatus('✅ Resultado descifrado exitosamente!');
+      setStatus('SUCCESS: Result decrypted successfully!');
       
     } catch (error) {
-      console.error('Error decrypting:', error);
-      setStatus(`❌ Error descifrando: Solo el paciente autorizado puede descifrar este resultado`);
+      console.error('❌ DECRYPTION FAILED');
+      console.error('  Error:', error);
+      console.error('  Error name:', (error as Error).name);
+      console.error('  Error message:', (error as Error).message);
+      console.error('');
+      console.error('🔍 DEBUGGING HINTS:');
+      console.error('  1. Check if the wallet you connected with is the SAME wallet');
+      console.error('     that the doctor entered when creating this result');
+      console.error('  2. Your connected wallet:', wallet.address);
+      console.error('  3. This result was created for a DIFFERENT wallet');
+      console.error('');
+      console.error('💡 SOLUTION: Ask the doctor what wallet address they used,');
+      console.error('   or create a new medical result using YOUR current wallet');
+      
+      setStatus(`Error decrypting: This result was encrypted for a different wallet. Only the wallet used during creation can decrypt.`);
       setDecryptedData(null);
     } finally {
       setIsLoading(false);
@@ -101,32 +130,34 @@ function PatientPanel({ wallet }: PatientPanelProps) {
 
   return (
     <div className="panel">
-      <h2>🏥 Patient Panel</h2>
+      <h2>Patient Panel</h2>
 
       {/* Wallet Status */}
       {!wallet.address ? (
         <div style={{
-          background: '#fff3cd',
+          background: '#422006',
           padding: '1.5rem',
           borderRadius: '8px',
           marginBottom: '1.5rem',
-          textAlign: 'center'
+          textAlign: 'center',
+          border: '2px solid #92400e'
         }}>
-          <p style={{ margin: 0, fontSize: '1.1rem' }}>
-            🔒 Por favor conecta tu wallet para ver tus resultados médicos
+          <p style={{ margin: 0, fontSize: '1.1rem', color: '#fbbf24' }}>
+            Please connect your wallet to view your medical results
           </p>
         </div>
       ) : (
         <div style={{
-          background: '#c8e6c9',
+          background: '#1a472a',
           padding: '1rem',
           borderRadius: '8px',
-          marginBottom: '1.5rem'
+          marginBottom: '1.5rem',
+          border: '2px solid #2e7d46'
         }}>
-          <p style={{ margin: 0, fontWeight: 'bold' }}>
-            ✅ Conectado como Paciente
+          <p style={{ margin: 0, fontWeight: 'bold', color: '#4ade80' }}>
+            Connected as Patient
           </p>
-          <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.85rem', fontFamily: 'monospace' }}>
+          <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.85rem', fontFamily: 'monospace', color: '#86efac' }}>
             {wallet.address}
           </p>
         </div>
@@ -141,11 +172,11 @@ function PatientPanel({ wallet }: PatientPanelProps) {
             width: '100%',
             padding: '0.75rem',
             marginBottom: '1rem',
-            background: isLoading ? '#ccc' : '#4CAF50',
+            background: isLoading ? '#475569' : '#4CAF50',
             cursor: isLoading ? 'not-allowed' : 'pointer'
           }}
         >
-          {isLoading ? '⏳ Cargando...' : '🔄 Actualizar Resultados'}
+          {isLoading ? 'Loading...' : 'Refresh Results'}
         </button>
       )}
 
@@ -153,10 +184,14 @@ function PatientPanel({ wallet }: PatientPanelProps) {
       {status && (
         <div style={{
           padding: '1rem',
-          background: status.includes('✅') ? '#c8e6c9' : 
-                     status.includes('❌') ? '#ffcdd2' : '#fff3cd',
+          background: status.includes('SUCCESS') ? '#1a472a' : 
+                     status.includes('Error') ? '#7f1d1d' : '#422006',
           borderRadius: '8px',
-          marginBottom: '1rem'
+          marginBottom: '1rem',
+          border: status.includes('SUCCESS') ? '2px solid #2e7d46' :
+                  status.includes('Error') ? '2px solid #dc2626' : '2px solid #92400e',
+          color: status.includes('SUCCESS') ? '#4ade80' :
+                 status.includes('Error') ? '#fca5a5' : '#fbbf24'
         }}>
           <p style={{ margin: 0 }}>{status}</p>
         </div>
@@ -165,31 +200,31 @@ function PatientPanel({ wallet }: PatientPanelProps) {
       {/* Results List */}
       {medicalResults.length > 0 && (
         <div className="section">
-          <h3>📋 Mis Resultados Médicos ({medicalResults.length})</h3>
+          <h3>My Medical Results ({medicalResults.length})</h3>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {medicalResults.map((result, index) => (
               <div
                 key={result.entityKey}
                 style={{
-                  border: '2px solid #e0e0e0',
+                  border: '2px solid #334155',
                   borderRadius: '8px',
                   padding: '1rem',
-                  background: selectedResult?.entityKey === result.entityKey ? '#e3f2fd' : '#fff'
+                  background: selectedResult?.entityKey === result.entityKey ? '#1e3a5f' : '#1e293b'
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
                   <div>
                     <h4 style={{ margin: '0 0 0.5rem 0' }}>
-                      📄 Resultado #{index + 1}
+                      Result #{index + 1}
                     </h4>
                     <p style={{ margin: '0.25rem 0', fontSize: '0.9rem' }}>
                       <strong>Doctor:</strong> {result.doctor}
                     </p>
                     <p style={{ margin: '0.25rem 0', fontSize: '0.9rem' }}>
-                      <strong>Fecha:</strong> {formatDate(result.timestamp)}
+                      <strong>Date:</strong> {formatDate(result.timestamp)}
                     </p>
-                    <p style={{ margin: '0.25rem 0', fontSize: '0.85rem', color: '#666' }}>
+                    <p style={{ margin: '0.25rem 0', fontSize: '0.85rem', color: '#94a3b8' }}>
                       <strong>Entity Key:</strong> {result.entityKey.slice(0, 20)}...
                     </p>
                   </div>
@@ -199,7 +234,7 @@ function PatientPanel({ wallet }: PatientPanelProps) {
                     disabled={isLoading}
                     style={{
                       padding: '0.5rem 1rem',
-                      background: isLoading ? '#ccc' : '#2196F3',
+                      background: isLoading ? '#475569' : '#2196F3',
                       color: 'white',
                       border: 'none',
                       borderRadius: '4px',
@@ -208,8 +243,8 @@ function PatientPanel({ wallet }: PatientPanelProps) {
                     }}
                   >
                     {selectedResult?.entityKey === result.entityKey && decryptedData
-                      ? '✓ Descifrado'
-                      : '🔓 Descifrar'}
+                      ? 'Decrypted'
+                      : 'Decrypt'}
                   </button>
                 </div>
 
@@ -218,28 +253,28 @@ function PatientPanel({ wallet }: PatientPanelProps) {
                   <div style={{
                     marginTop: '1rem',
                     padding: '1rem',
-                    background: '#f5f5f5',
+                    background: '#1e293b',
                     borderRadius: '8px',
                     border: '2px solid #4CAF50'
                   }}>
                     <h4 style={{ margin: '0 0 1rem 0', color: '#4CAF50' }}>
-                      🔓 Resultado Descifrado
+                      Decrypted Result
                     </h4>
                     
                     <div style={{ display: 'grid', gap: '0.75rem' }}>
                       <div>
-                        <strong>Paciente:</strong> {decryptedData.patientName}
+                        <strong>Patient:</strong> {decryptedData.patientName}
                       </div>
                       <div>
-                        <strong>Tipo de Test:</strong> {decryptedData.testType}
+                        <strong>Test Type:</strong> {decryptedData.testType}
                       </div>
                       <div>
-                        <strong>Fecha del Test:</strong> {decryptedData.date}
+                        <strong>Test Date:</strong> {decryptedData.date}
                       </div>
                       
                       {Object.keys(decryptedData.results).length > 0 && (
                         <div>
-                          <strong>Resultados:</strong>
+                          <strong>Results:</strong>
                           <ul style={{ margin: '0.5rem 0', paddingLeft: '1.5rem' }}>
                             {Object.entries(decryptedData.results).map(([key, value]) => (
                               <li key={key}>
@@ -252,13 +287,14 @@ function PatientPanel({ wallet }: PatientPanelProps) {
                       
                       {decryptedData.notes && (
                         <div>
-                          <strong>Notas Clínicas:</strong>
+                          <strong>Clinical Notes:</strong>
                           <p style={{ 
                             margin: '0.5rem 0 0 0', 
                             padding: '0.5rem', 
-                            background: 'white', 
+                            background: '#0f172a', 
                             borderRadius: '4px',
-                            fontStyle: 'italic'
+                            fontStyle: 'italic',
+                            border: '1px solid #334155'
                           }}>
                             {decryptedData.notes}
                           </p>
@@ -278,14 +314,17 @@ function PatientPanel({ wallet }: PatientPanelProps) {
         <div style={{
           padding: '3rem 1rem',
           textAlign: 'center',
-          color: '#999'
+          color: '#94a3b8',
+          background: '#1e293b',
+          borderRadius: '8px',
+          border: '1px dashed #334155'
         }}>
-          <p style={{ fontSize: '3rem', margin: '0 0 1rem 0' }}>📭</p>
+          <p style={{ fontSize: '3rem', margin: '0 0 1rem 0' }}></p>
           <p style={{ fontSize: '1.1rem', margin: 0 }}>
-            No tienes resultados médicos aún
+            No medical results yet
           </p>
           <p style={{ fontSize: '0.9rem', margin: '0.5rem 0 0 0' }}>
-            Los resultados aparecerán aquí cuando tu doctor los cree
+            Results will appear here when your doctor creates them
           </p>
         </div>
       )}
@@ -294,16 +333,17 @@ function PatientPanel({ wallet }: PatientPanelProps) {
       <div style={{
         marginTop: '2rem',
         padding: '1rem',
-        background: '#f5f5f5',
+        background: '#1e293b',
         borderRadius: '8px',
-        fontSize: '0.9rem'
+        fontSize: '0.9rem',
+        border: '1px solid #334155'
       }}>
-        <h4 style={{ marginTop: 0 }}>ℹ️ Cómo funciona:</h4>
+        <h4 style={{ marginTop: 0 }}>How it works:</h4>
         <ol style={{ margin: 0, paddingLeft: '1.5rem' }}>
-          <li>Conecta tu wallet (MetaMask u otra)</li>
-          <li>El sistema consulta Arkiv para tus resultados médicos</li>
-          <li>Haz clic en "Descifrar" para ver el contenido</li>
-          <li>Solo tu wallet privada puede descifrar tus resultados</li>
+          <li>Connect your wallet (MetaMask or other)</li>
+          <li>The system queries Arkiv for your medical results</li>
+          <li>Click "Decrypt" to view the content</li>
+          <li>Only your private wallet can decrypt your results</li>
         </ol>
       </div>
     </div>

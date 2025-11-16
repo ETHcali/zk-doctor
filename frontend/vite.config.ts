@@ -8,18 +8,22 @@ export default defineConfig({
     alias: {
       crypto: 'crypto-browserify',
       stream: 'stream-browserify',
-      buffer: 'buffer'
+      buffer: 'buffer',
+      events: 'events',
+      util: 'util'
     }
   },
   define: {
     'process.env': {},
-    global: 'globalThis'
+    global: 'globalThis',
+    'process.version': JSON.stringify('v18.0.0')
   },
   optimizeDeps: {
     esbuildOptions: {
       define: {
         global: 'globalThis'
       }
-    }
+    },
+    include: ['buffer', 'events', 'util']
   }
 })

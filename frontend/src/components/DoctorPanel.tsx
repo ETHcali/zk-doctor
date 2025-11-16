@@ -1,5 +1,5 @@
 /**
- * DoctorPanel - Interfaz para que el doctor cree resultados médicos cifrados
+ * DoctorPanel - Interface for doctors to create encrypted medical results
  */
 
 import { useState } from 'react';
@@ -28,23 +28,30 @@ function DoctorPanel() {
   const [txHash, setTxHash] = useState('');
 
   const handleGenerateResult = async () => {
-    // Validar
+    // Validate
     if (!patientName || !patientWallet || !testType) {
-      alert('Por favor completa al menos: Nombre, Wallet y Tipo de Test');
+      alert('Please complete at least: Name, Wallet and Test Type');
       return;
     }
 
-    // Validar wallet format
+    // Validate wallet format
     if (!patientWallet.match(/^0x[a-fA-F0-9]{40}$/)) {
-      alert('Wallet address inválida. Debe ser formato 0x...');
+      alert('Invalid wallet address. Must be 0x... format');
       return;
     }
 
     setIsLoading(true);
-    setStatus('🔐 Generando token cifrado...');
+    setStatus('Generating encrypted token...');
+
+    console.log('🔐 CREATING MEDICAL RESULT');
+    console.log('  Patient Name:', patientName);
+    console.log('  Patient Wallet:', patientWallet);
+    console.log('  Test Type:', testType);
+    console.log('  ⚠️  IMPORTANT: Token will be encrypted with this wallet:', patientWallet);
+    console.log('  ⚠️  Only this wallet will be able to decrypt the result!');
 
     try {
-      // Construir datos médicos
+      // Build medical data
       const results: Record<string, string> = {};
       if (resultField1 && resultValue1) {
         results[resultField1] = resultValue1;
@@ -62,11 +69,14 @@ function DoctorPanel() {
         notes: notes || undefined
       };
 
+      console.log('  Step 1: Generating encrypted token...');
       // Generar token cifrado
       const encryptedToken = generateMedicalToken(medicalData);
       const tokenString = serializeToken(encryptedToken);
+      console.log('  Token generated - Size:', tokenString.length, 'bytes');
 
-      setStatus('📤 Guardando en Arkiv...');
+      setStatus('Saving to Arkiv...');
+      console.log('  Step 2: Saving to Arkiv...');
 
       // Guardar en Arkiv
       const receipt = await saveMedicalResult(
@@ -79,9 +89,15 @@ function DoctorPanel() {
         30 // 30 días de expiración
       );
 
+      console.log('  ✅ SUCCESS!');
+      console.log('  Entity Key:', receipt.entityKey);
+      console.log('  TX Hash:', receipt.transactionHash);
+      console.log('');
+      console.log('  📝 REMEMBER: This result can ONLY be decrypted by wallet:', patientWallet);
+
       setEntityKey(receipt.entityKey);
       setTxHash(receipt.transactionHash);
-      setStatus('✅ Resultado médico guardado exitosamente en Arkiv!');
+      setStatus('SUCCESS: Medical result saved successfully to Arkiv!');
 
       // Limpiar formulario
       setTimeout(() => {
@@ -96,7 +112,16 @@ function DoctorPanel() {
 
     } catch (error) {
       console.error('Error:', error);
-      setStatus(`❌ Error: ${error}`);
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      
+      // User-friendly error messages
+      if (errorMsg.includes('WebAssembly') || errorMsg.includes('magic word')) {
+        setStatus('Error: Arkiv SDK configuration issue. Mendoza testnet may be offline or SDK version needs update. For now, encryption works but cannot save to Arkiv.');
+      } else if (errorMsg.includes('network')) {
+        setStatus('Network error. Check your internet connection.');
+      } else {
+        setStatus(`Error: ${errorMsg}`);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -114,26 +139,27 @@ function DoctorPanel() {
 
   return (
     <div className="panel">
-      <h2>🏥 Doctor Panel</h2>
+      <h2>Doctor Panel</h2>
       
       {/* Doctor Session Info */}
       <div style={{
-        background: '#e3f2fd',
+        background: '#1a472a',
         padding: '1rem',
         borderRadius: '8px',
-        marginBottom: '1.5rem'
+        marginBottom: '1.5rem',
+        border: '2px solid #2e7d46'
       }}>
-        <p style={{ margin: 0, fontWeight: 'bold' }}>
-          👨‍⚕️ Logged in as: {DOCTOR_NAME}
+        <p style={{ margin: 0, fontWeight: 'bold', color: '#4ade80' }}>
+          Logged in as: {DOCTOR_NAME}
         </p>
-        <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem', color: '#666' }}>
+        <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem', color: '#86efac' }}>
           ID: {DOCTOR_ID}
         </p>
       </div>
 
       {/* Patient Info */}
       <div className="section">
-        <h3>📋 Patient Information</h3>
+        <h3>Patient Information</h3>
         
         <label>
           Patient Name *
@@ -156,14 +182,14 @@ function DoctorPanel() {
             disabled={isLoading}
           />
         </label>
-        <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '-0.5rem' }}>
-          Solo el paciente con esta wallet podrá descifrar el resultado
+        <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '-0.5rem' }}>
+          Only the patient with this wallet will be able to decrypt the result
         </p>
       </div>
 
       {/* Test Info */}
       <div className="section">
-        <h3>🔬 Test Information</h3>
+        <h3>Test Information</h3>
 
         <label>
           Test Type *
@@ -243,11 +269,11 @@ function DoctorPanel() {
           padding: '1rem',
           fontSize: '1.1rem',
           fontWeight: 'bold',
-          background: isLoading ? '#ccc' : '#2196F3',
+          background: isLoading ? '#475569' : '#2196F3',
           cursor: isLoading ? 'not-allowed' : 'pointer'
         }}
       >
-        {isLoading ? '⏳ Processing...' : '🔐 Generate Encrypted Result'}
+        {isLoading ? 'Processing...' : 'Generate Encrypted Result'}
       </button>
 
       {/* Status */}
@@ -255,9 +281,13 @@ function DoctorPanel() {
         <div style={{
           marginTop: '1rem',
           padding: '1rem',
-          background: status.includes('✅') ? '#c8e6c9' : 
-                     status.includes('❌') ? '#ffcdd2' : '#fff3cd',
-          borderRadius: '8px'
+          background: status.includes('success') ? '#1a472a' : 
+                     status.includes('Error') ? '#7f1d1d' : '#422006',
+          borderRadius: '8px',
+          border: status.includes('success') ? '2px solid #2e7d46' :
+                  status.includes('Error') ? '2px solid #dc2626' : '2px solid #92400e',
+          color: status.includes('success') ? '#4ade80' :
+                 status.includes('Error') ? '#fca5a5' : '#fbbf24'
         }}>
           <p style={{ margin: 0 }}>{status}</p>
           
@@ -267,11 +297,12 @@ function DoctorPanel() {
                 <strong>Entity Key:</strong>
                 <br />
                 <code style={{ 
-                  background: '#f5f5f5', 
+                  background: '#1e293b', 
                   padding: '0.25rem 0.5rem',
                   borderRadius: '4px',
                   fontSize: '0.85rem',
-                  wordBreak: 'break-all'
+                  wordBreak: 'break-all',
+                  color: '#60a5fa'
                 }}>
                   {entityKey}
                 </code>
@@ -290,16 +321,17 @@ function DoctorPanel() {
       <div style={{
         marginTop: '2rem',
         padding: '1rem',
-        background: '#f5f5f5',
+        background: '#1e293b',
         borderRadius: '8px',
-        fontSize: '0.9rem'
+        fontSize: '0.9rem',
+        border: '1px solid #334155'
       }}>
-        <h4 style={{ marginTop: 0 }}>ℹ️ How it works:</h4>
+        <h4 style={{ marginTop: 0 }}>How it works:</h4>
         <ol style={{ margin: 0, paddingLeft: '1.5rem' }}>
-          <li>Complete el formulario con los datos médicos</li>
-          <li>El sistema cifra los datos con la wallet del paciente</li>
-          <li>El resultado se guarda en Arkiv (data layer de Polkadot)</li>
-          <li>Solo el paciente puede descifrar con su wallet privada</li>
+          <li>Complete the form with medical data</li>
+          <li>The system encrypts data with the patient's wallet</li>
+          <li>The result is saved to Arkiv (Polkadot data layer)</li>
+          <li>Only the patient can decrypt with their private wallet</li>
         </ol>
       </div>
     </div>

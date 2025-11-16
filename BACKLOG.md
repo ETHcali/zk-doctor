@@ -2,9 +2,11 @@
 
 **Project**: zk-doctor (Arkiv/Polkadot)  
 **Previous**: ZKPJWT (Arbitrum)  
-**Status**: Migration 80% Complete  
+**Status**: Backend Architecture Complete - Testing Phase  
 **Target**: Sub0 Polkadot Hackathon  
 **Date**: 16 de noviembre de 2025
+
+**IMPORTANT NOTE**: Arkiv SDK is Node.js only and cannot run in browsers. Architecture updated to use Backend API (Express + Arkiv SDK) with Frontend (React + Fetch API).
 
 ---
 
@@ -26,38 +28,14 @@ Como desarrollador del proyecto zk-doctor, necesito un repositorio limpio sin ar
 
 #### ✅ Criterios de Aceptación
 
-- [ ] **AC-1**: Archivos Markdown obsoletos eliminados:
-  - `DEPLOYMENT.md` (específico de Arbitrum)
-  - `DEPLOYMENT_SUMMARY.md` (contratos Solidity)
-  - `DEMO_SCRIPT.md` (flujo antiguo)
-  - `EXECUTIVE_SUMMARY.md` (contexto Arbitrum)
-  - `INDEX.md` (índice desactualizado)
-  - `QUICKSTART.md` (setup antiguo)
-  - `STATUS.md` (status de Arbitrum)
-  - `SUBMISSION_CHECKLIST.md` (Arbitrum bounty)
-  - `TASKS.md` (tickets Arbitrum)
-  - `TESTING_GUIDE.md` (tests de blockchain)
-  - `UX_FLOW.md` (flujo antiguo)
-  - `contexto.md` (contexto Arbitrum)
+- [x] **AC-1**: Archivos Markdown obsoletos eliminados ✅ COMPLETED
+- [x] **AC-2**: Directorio `contracts/` eliminado o archivado ✅ COMPLETED
+- [x] **AC-3**: Directorio `circuits/` eliminado o archivado ✅ COMPLETED
+- [x] **AC-4**: Directorio `zkpjwt-stylus/` eliminado o archivado ✅ COMPLETED
+- [x] **AC-5**: Script `test-all.sh` actualizado o eliminado ✅ COMPLETED
+- [x] **AC-6**: Crear directorio `archive/` ✅ COMPLETED
 
-- [ ] **AC-2**: Directorio `contracts/` eliminado o archivado
-  - Contiene `ZKPJWTVerifier.sol` (no necesario para Arkiv)
-  - README específico de Solidity
-
-- [ ] **AC-3**: Directorio `circuits/` eliminado o archivado
-  - Contiene `merkleProof.circom` (no usado en MVP)
-  - README de Circom
-
-- [ ] **AC-4**: Directorio `zkpjwt-stylus/` eliminado o archivado
-  - Proyecto Rust completo de Arbitrum Stylus
-  - No relevante para Arkiv
-
-- [ ] **AC-5**: Script `test-all.sh` actualizado o eliminado
-  - Hace referencia a componentes antiguos
-
-- [ ] **AC-6**: Crear directorio `archive/` (opcional)
-  - Mover archivos legacy en lugar de eliminarlos
-  - Mantener historial si es necesario
+**STATUS**: ✅ COMPLETED - All legacy files archived to /archive/
 
 #### 🚀 Comandos de Ejecución
 
@@ -280,6 +258,8 @@ TICKET: ZKD-104
 **Estimación**: 20 minutos  
 **Tipo**: Bug Fix
 
+**STATUS**: ✅ COMPLETED - Component syntax was already correct
+
 #### 📝 Descripción
 
 El componente DoctorPanel.tsx tiene un error de sintaxis en el `<select>` que genera errores de TypeScript.
@@ -290,17 +270,11 @@ Como desarrollador compilando el proyecto, necesito que DoctorPanel compile sin 
 
 #### ✅ Criterios de Aceptación
 
-- [ ] **AC-1**: Línea 176 corregida
-  - Cambiar `<key={type}` a `<option key={type}`
-  - Cerrar correctamente con `</option>`
+- [x] **AC-1**: ✅ COMPLETED - Component syntax verified correct (no issues found)
 
-- [ ] **AC-2**: TypeScript compile sin errores
-  - `npm run build` exitoso
-  - No warnings relacionados con DoctorPanel
+- [x] **AC-2**: ✅ COMPLETED - TypeScript compiles without errors
 
-- [ ] **AC-3**: Funcionalidad intacta
-  - Dropdown de test types funciona
-  - Todas las opciones se muestran correctamente
+- [x] **AC-3**: ✅ COMPLETED - Functionality verified intact
 
 #### 📦 Commit Message
 

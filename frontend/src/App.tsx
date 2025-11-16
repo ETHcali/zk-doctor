@@ -54,7 +54,7 @@ function App() {
       </div>
 
       <header className="app-header">
-        <h1>🏥 zk-doctor</h1>
+        <h1>zk-doctor</h1>
         <p className="tagline">Private Medical Results on Arkiv</p>
         <p className="subtitle">Encrypted healthcare data powered by Zero-Knowledge + Polkadot</p>
       </header>
@@ -64,13 +64,13 @@ function App() {
           className={`mode-btn ${mode === 'doctor' ? 'active' : ''}`}
           onClick={() => switchMode('doctor')}
         >
-          👨‍⚕️ Doctor
+          Doctor
         </button>
         <button 
           className={`mode-btn ${mode === 'patient' ? 'active' : ''}`}
           onClick={() => switchMode('patient')}
         >
-          👤 Patient
+          Patient
         </button>
       </div>
 
