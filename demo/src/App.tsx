@@ -1,19 +1,19 @@
 import { useState } from 'react';
 import { BrowserProvider } from 'ethers';
 import './App.css';
-import SenderPanel from './components/SenderPanel';
-import ReceiverPanel from './components/ReceiverPanel';
+import DoctorPanel from './components/DoctorPanel';
+import PatientPanel from './components/PatientPanel';
 
 interface WalletState {
   address: string | null;
   provider: BrowserProvider | null;
 }
 
-type Mode = 'sender' | 'receiver';
+type Mode = 'doctor' | 'patient';
 
 function App() {
   const [wallet, setWallet] = useState<WalletState>({ address: null, provider: null });
-  const [mode, setMode] = useState<Mode>('sender');
+  const [mode, setMode] = useState<Mode>('doctor');
 
   const connectWallet = async () => {
     if (typeof window.ethereum === 'undefined') {
@@ -54,43 +54,47 @@ function App() {
       </div>
 
       <header className="app-header">
-        <h1>ZKPJWT</h1>
-        <p className="tagline">The ancient JWT from Web2 with the power of ZKP</p>
-        <p className="subtitle">A Web2-friendly library</p>
+        <h1>🏥 zk-doctor</h1>
+        <p className="tagline">Private Medical Results on Arkiv</p>
+        <p className="subtitle">Encrypted healthcare data powered by Zero-Knowledge + Polkadot</p>
       </header>
 
       <div className="mode-selector">
         <button 
-          className={`mode-btn ${mode === 'sender' ? 'active' : ''}`}
-          onClick={() => switchMode('sender')}
+          className={`mode-btn ${mode === 'doctor' ? 'active' : ''}`}
+          onClick={() => switchMode('doctor')}
         >
-          Sender (Create Token)
+          👨‍⚕️ Doctor
         </button>
         <button 
-          className={`mode-btn ${mode === 'receiver' ? 'active' : ''}`}
-          onClick={() => switchMode('receiver')}
+          className={`mode-btn ${mode === 'patient' ? 'active' : ''}`}
+          onClick={() => switchMode('patient')}
         >
-          Receiver (Decrypt)
+          👤 Patient
         </button>
       </div>
 
       <div className="main-container">
-        {mode === 'sender' ? (
-          <SenderPanel wallet={wallet} />
+        {mode === 'doctor' ? (
+          <DoctorPanel />
         ) : (
-          <ReceiverPanel wallet={wallet} />
+          <PatientPanel wallet={wallet} />
         )}
       </div>
 
       <footer className="app-footer">
-        <p>Built for Arbitrum ARG25 Program</p>
+        <p>Built for Sub0 Polkadot Hackathon - Arkiv Track</p>
         <p>
-          <a href="https://github.com/DevCristobalvc/zkp-jwt" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/ETHcali/zk-doctor" target="_blank" rel="noopener noreferrer">
             GitHub
           </a>
           {' | '}
-          <a href="https://docs.arbitrum.io/stylus" target="_blank" rel="noopener noreferrer">
-            Arbitrum Stylus
+          <a href="https://arkiv.dev.golem.network/docs" target="_blank" rel="noopener noreferrer">
+            Arkiv Docs
+          </a>
+          {' | '}
+          <a href="https://hack.sub0.gg/" target="_blank" rel="noopener noreferrer">
+            Sub0 Hackathon
           </a>
         </p>
       </footer>
